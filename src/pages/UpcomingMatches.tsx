@@ -118,7 +118,7 @@ const UpcomingMatches = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
                 <Button
                   size="lg"
-                  className="bg-white text-primary hover:bg-white/90 font-semibold px-8 py-6 text-lg shadow-xl hover:shadow-2xl transition-all transform hover:scale-105"
+                  className="w-full sm:w-64 bg-white text-primary hover:bg-white/90 font-semibold px-8 py-6 text-lg shadow-xl hover:shadow-2xl transition-all transform hover:scale-105"
                   onClick={() =>
                     filteredMatches.length > 0 &&
                     handleMatchClick(filteredMatches[0])
@@ -127,10 +127,11 @@ const UpcomingMatches = () => {
                   Start Playing Now
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
+
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-2 border-white/30 bg-white/10 backdrop-blur-sm hover:bg-white/20 font-semibold px-8 py-6 text-lg"
+                  className="w-full sm:w-64 border-2 border-white/30 bg-white/10 backdrop-blur-sm hover:bg-white/20 font-semibold px-8 py-6 text-lg"
                   onClick={() => navigate("/")}
                 >
                   View My Teams

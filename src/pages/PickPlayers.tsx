@@ -14,19 +14,35 @@ import {
   getTotalCredits,
   isTeamValid,
 } from "@/utils/teamValidation";
-import { Loader2, ChevronDown, ChevronUp, Zap, Sparkles } from "lucide-react";
+import {
+  Loader2,
+  ChevronDown,
+  ChevronUp,
+  Zap,
+  Sparkles,
+  Brain,
+  TrendingUp,
+} from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { PlayerStatsModal } from "@/components/players/PlayerStatsModal";
 import { PlayerFilters } from "@/components/players/PlayerFilters";
 import { RoleTabs } from "@/components/players/RoleTabs";
 import { SmartSuggestModal } from "@/components/players/SmartSuggestModal";
 import { TeamSlots } from "@/components/players/TeamSlots";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { generatePlayerStats } from "@/services/api/playerStats";
 import { PlayerStats } from "@/types/contest";
 import { usePlayers } from "@/services/hooks/usePlayers";
@@ -65,6 +81,7 @@ const PickPlayers = () => {
   const [showSmartSuggestModal, setShowSmartSuggestModal] = useState(false);
   const [generatingSuggestions, setGeneratingSuggestions] = useState(false);
   const [isTeamSlotsOpen, setIsTeamSlotsOpen] = useState(false);
+  const [showIntroModal, setShowIntroModal] = useState(false);
 
   useEffect(() => {
     if (error) {
@@ -81,6 +98,13 @@ const PickPlayers = () => {
       setSelectedPlayers(existingTeam.players);
     }
   }, [isEditing, existingTeam]);
+
+  useEffect(() => {
+    const hasSeenIntro = localStorage.getItem("hasSeenAISuggestIntro");
+    if (!hasSeenIntro) {
+      setShowIntroModal(true);
+    }
+  }, []);
 
   const teamSuggestions = useMemo(() => {
     if (!allPlayers || allPlayers.length === 0) return [];
@@ -198,7 +222,7 @@ const PickPlayers = () => {
   const roles = ["All", "Wicket-Keeper", "Batsman", "All-Rounder", "Bowler"];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 pb-32">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 pb-20">
       <Header title="Select Players" showBack />
 
       <div className="lg:hidden container mx-auto px-4 pt-4">
@@ -206,7 +230,7 @@ const PickPlayers = () => {
           <CollapsibleTrigger asChild>
             <Button
               variant="outline"
-              className="w-full mb-4 justify-between"
+              className="w-full justify-between"
               size="lg"
             >
               <span className="font-semibold">
@@ -242,44 +266,46 @@ const PickPlayers = () => {
         </Collapsible>
       </div>
 
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-4 pt-4">
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Main Content - Player List */}
           <div className="flex-1 order-2 lg:order-1">
-            <PlayerFilters
-              searchTerm={searchTerm}
-              onSearchChange={setSearchTerm}
-              teamFilter={teamFilter}
-              onTeamFilterChange={setTeamFilter}
-              countryFilter={countryFilter}
-              onCountryFilterChange={setCountryFilter}
-              playingFilter={playingFilter}
-              onPlayingFilterChange={setPlayingFilter}
-              creditsFilter={creditsFilter}
-              onCreditsFilterChange={setCreditsFilter}
-              allPlayers={allPlayers || []}
-            />
-
-            {loading ? (
-              <div className="flex items-center justify-center py-20">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              </div>
-            ) : (
-              <RoleTabs
-                activeRole={activeRole}
-                onRoleChange={setActiveRole}
-                selectedPlayers={selectedPlayers}
-                filteredPlayers={filteredPlayers}
-                isPlayerSelected={isPlayerSelected}
-                onPlayerToggle={handlePlayerToggle}
-                onPlayerInfo={handlePlayerInfo}
+            <ScrollArea className="h-[calc(100vh-200px)]">
+              <PlayerFilters
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                teamFilter={teamFilter}
+                onTeamFilterChange={setTeamFilter}
+                countryFilter={countryFilter}
+                onCountryFilterChange={setCountryFilter}
+                playingFilter={playingFilter}
+                onPlayingFilterChange={setPlayingFilter}
+                creditsFilter={creditsFilter}
+                onCreditsFilterChange={setCreditsFilter}
+                allPlayers={allPlayers || []}
               />
-            )}
+
+              {loading ? (
+                <div className="flex items-center justify-center py-20">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                </div>
+              ) : (
+                <RoleTabs
+                  activeRole={activeRole}
+                  onRoleChange={setActiveRole}
+                  selectedPlayers={selectedPlayers}
+                  filteredPlayers={filteredPlayers}
+                  isPlayerSelected={isPlayerSelected}
+                  onPlayerToggle={handlePlayerToggle}
+                  onPlayerInfo={handlePlayerInfo}
+                />
+              )}
+            </ScrollArea>
           </div>
 
-          {/* Sidebar - Updated sticky position (now top-20 since stats bar is removed) */}
+          {/* Sidebar */}
           <aside className="w-full lg:w-96 order-1 lg:order-2 hidden lg:block">
-            <div className="sticky top-20 space-y-4">
+            <ScrollArea className="h-[calc(100vh-200px)]">
               <TeamSlots
                 selectedPlayers={selectedPlayers}
                 onRemovePlayer={(playerId) => {
@@ -298,14 +324,14 @@ const PickPlayers = () => {
                 canAISuggest={!!allPlayers && allPlayers.length > 0}
                 isGeneratingSuggestions={generatingSuggestions}
               />
-            </div>
+            </ScrollArea>
           </aside>
         </div>
       </div>
 
       {/* Fixed Bottom Bar - highest z-index */}
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur-sm border-t border-border shadow-xl z-40">
-        <div className="container mx-auto">
+        <div className="container mx-auto px-0">
           <Button
             onClick={handleNext}
             disabled={
@@ -321,6 +347,65 @@ const PickPlayers = () => {
           </Button>
         </div>
       </div>
+
+      <Dialog open={showIntroModal} onOpenChange={setShowIntroModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            {/* AI Icon */}
+            <div className="mx-auto mb-3 w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-lg">
+              <Sparkles className="h-7 w-7 text-white" />
+            </div>
+
+            <DialogTitle className="text-center text-xl">
+              AI Team Suggestions
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              Get smart player recommendations based on form and statistics to
+              build winning teams.
+            </DialogDescription>
+          </DialogHeader>
+
+          {/* Compact Feature List */}
+          <div className="space-y-2 py-4">
+            <div className="flex items-center gap-3 text-sm">
+              <div className="p-2 bg-purple-500/10 rounded-lg">
+                <Brain className="h-4 w-4 text-purple-600" />
+              </div>
+              <span className="text-muted-foreground">
+                Smart player analysis
+              </span>
+            </div>
+
+            <div className="flex items-center gap-3 text-sm">
+              <div className="p-2 bg-blue-500/10 rounded-lg">
+                <TrendingUp className="h-4 w-4 text-blue-600" />
+              </div>
+              <span className="text-muted-foreground">
+                Form-based selection
+              </span>
+            </div>
+
+            <div className="flex items-center gap-3 text-sm">
+              <div className="p-2 bg-cyan-500/10 rounded-lg">
+                <Zap className="h-4 w-4 text-cyan-600" />
+              </div>
+              <span className="text-muted-foreground">Instant suggestions</span>
+            </div>
+          </div>
+
+          {/* Action Button */}
+          <Button
+            onClick={() => {
+              setShowIntroModal(false);
+              localStorage.setItem("hasSeenAISuggestIntro", "true");
+            }}
+            className="w-full bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700"
+          >
+            <Sparkles className="h-4 w-4 mr-2" />
+            Got it!
+          </Button>
+        </DialogContent>
+      </Dialog>
 
       <SmartSuggestModal
         open={showSmartSuggestModal}

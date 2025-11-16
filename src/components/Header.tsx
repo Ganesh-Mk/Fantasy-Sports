@@ -19,7 +19,7 @@ interface HeaderProps {
 
 export const Header = ({ title, showBack = false }: HeaderProps) => {
   const navigate = useNavigate();
-  const [notificationCount] = useState(3); // You can make this dynamic
+  // const [notificationCount] = useState(3);
 
   return (
     <header className="bg-gradient-to-r from-primary via-primary/95 to-primary/90 text-primary-foreground sticky top-0 z-50 shadow-lg backdrop-blur-md border-b border-white/10">
@@ -108,14 +108,14 @@ export const Header = ({ title, showBack = false }: HeaderProps) => {
               onClick={() => navigate("/")}
             >
               <Bell className="h-5 w-5" />
-              {notificationCount > 0 && (
+              {/* {notificationCount > 0 && (
                 <Badge
                   variant="destructive"
                   className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs animate-bounce"
                 >
                   {notificationCount}
                 </Badge>
-              )}
+              )} */}
             </Button>
 
             {/* User Menu */}

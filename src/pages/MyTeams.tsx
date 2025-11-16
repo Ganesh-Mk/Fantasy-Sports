@@ -165,7 +165,7 @@ const MyTeams = () => {
 
       {/* Fixed Bottom Action Bar */}
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur-sm border-t border-border shadow-xl">
-        <div className="container mx-auto">
+        <div className="container mx-auto px-0">
           <Button
             onClick={handleCreateTeam}
             className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground font-semibold shadow-lg h-12 text-base"
