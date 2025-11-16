@@ -37,7 +37,7 @@ export const PlayerFilters = ({
   allPlayers,
 }: PlayerFiltersProps) => {
   return (
-    <div className="mb-4 space-y-3">
+    <div className="space-y-3 mb-4">
       {/* Search Bar */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -49,63 +49,73 @@ export const PlayerFilters = ({
         />
       </div>
 
-      {/* Filter Dropdowns */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-        <Select value={teamFilter} onValueChange={onTeamFilterChange}>
-          <SelectTrigger className="w-full h-10">
-            <SelectValue placeholder="Team" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="All">All Teams</SelectItem>
-            {[...new Set(allPlayers?.map((p) => p.team_name) || [])].map(
-              (team) => (
-                <SelectItem key={team} value={team}>
-                  {team}
-                </SelectItem>
-              )
-            )}
-          </SelectContent>
-        </Select>
+      {/* Filter Dropdowns - Horizontal scroll on mobile, grid on desktop */}
+      <div className="w-full overflow-x-auto scrollbar-hide lg:overflow-visible">
+        <div className="flex gap-2 lg:grid lg:grid-cols-4 lg:gap-2 min-w-max lg:min-w-0">
+          <Select value={teamFilter} onValueChange={onTeamFilterChange}>
+            <SelectTrigger className="min-w-[130px] lg:min-w-0 w-[130px] lg:w-full h-10">
+              <SelectValue placeholder="Team">
+                {teamFilter === "All" ? "All Teams" : teamFilter}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="All">All Teams</SelectItem>
+              {[...new Set(allPlayers?.map((p) => p.team_name) || [])].map(
+                (team) => (
+                  <SelectItem key={team} value={team}>
+                    {team}
+                  </SelectItem>
+                )
+              )}
+            </SelectContent>
+          </Select>
 
-        <Select value={countryFilter} onValueChange={onCountryFilterChange}>
-          <SelectTrigger className="w-full h-10">
-            <SelectValue placeholder="Country" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="All">All Countries</SelectItem>
-            {[...new Set(allPlayers?.map((p) => p.country) || [])].map(
-              (country) => (
-                <SelectItem key={country} value={country}>
-                  {country}
-                </SelectItem>
-              )
-            )}
-          </SelectContent>
-        </Select>
+          <Select value={countryFilter} onValueChange={onCountryFilterChange}>
+            <SelectTrigger className="min-w-[130px] lg:min-w-0 w-[130px] lg:w-full h-10">
+              <SelectValue placeholder="Country">
+                {countryFilter === "All" ? "All Countries" : countryFilter}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="All">All Countries</SelectItem>
+              {[...new Set(allPlayers?.map((p) => p.country) || [])].map(
+                (country) => (
+                  <SelectItem key={country} value={country}>
+                    {country}
+                  </SelectItem>
+                )
+              )}
+            </SelectContent>
+          </Select>
 
-        <Select value={playingFilter} onValueChange={onPlayingFilterChange}>
-          <SelectTrigger className="w-full h-10">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="All">All Players</SelectItem>
-            <SelectItem value="Playing">Playing</SelectItem>
-            <SelectItem value="Not Playing">Not Playing</SelectItem>
-          </SelectContent>
-        </Select>
+          <Select value={playingFilter} onValueChange={onPlayingFilterChange}>
+            <SelectTrigger className="min-w-[130px] lg:min-w-0 w-[130px] lg:w-full h-10">
+              <SelectValue placeholder="Status">
+                {playingFilter === "All" ? "All Players" : playingFilter}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="All">All Players</SelectItem>
+              <SelectItem value="Playing">Playing</SelectItem>
+              <SelectItem value="Not Playing">Not Playing</SelectItem>
+            </SelectContent>
+          </Select>
 
-        <Select value={creditsFilter} onValueChange={onCreditsFilterChange}>
-          <SelectTrigger className="w-full h-10">
-            <SelectValue placeholder="Credits" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="All">All Credits</SelectItem>
-            <SelectItem value="4-6">4 - 6</SelectItem>
-            <SelectItem value="6-8">6 - 8</SelectItem>
-            <SelectItem value="8-10">8 - 10</SelectItem>
-            <SelectItem value="10+">10+</SelectItem>
-          </SelectContent>
-        </Select>
+          <Select value={creditsFilter} onValueChange={onCreditsFilterChange}>
+            <SelectTrigger className="min-w-[130px] lg:min-w-0 w-[130px] lg:w-full h-10">
+              <SelectValue placeholder="Credits">
+                {creditsFilter === "All" ? "All Credits" : creditsFilter}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="All">All Credits</SelectItem>
+              <SelectItem value="4-6">4 - 6</SelectItem>
+              <SelectItem value="6-8">6 - 8</SelectItem>
+              <SelectItem value="8-10">8 - 10</SelectItem>
+              <SelectItem value="10+">10+</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
     </div>
   );

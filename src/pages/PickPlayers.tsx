@@ -24,12 +24,6 @@ import {
   TrendingUp,
 } from "lucide-react";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -42,7 +36,6 @@ import { PlayerFilters } from "@/components/players/PlayerFilters";
 import { RoleTabs } from "@/components/players/RoleTabs";
 import { SmartSuggestModal } from "@/components/players/SmartSuggestModal";
 import { TeamSlots } from "@/components/players/TeamSlots";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { generatePlayerStats } from "@/services/api/playerStats";
 import { PlayerStats } from "@/types/contest";
 import { usePlayers } from "@/services/hooks/usePlayers";
@@ -218,19 +211,17 @@ const PickPlayers = () => {
     });
   };
 
-  const creditsLeft = MAX_CREDITS - getTotalCredits(selectedPlayers);
-  const roles = ["All", "Wicket-Keeper", "Batsman", "All-Rounder", "Bowler"];
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 pb-20">
+    <div className="h-screen flex flex-col overflow-hidden bg-gradient-to-br from-background via-background to-secondary/20">
       <Header title="Select Players" showBack />
 
-      <div className="lg:hidden container mx-auto px-4 pt-4">
+      {/* Mobile Team Slots Collapsible */}
+      <div className="lg:hidden container mx-auto px-4 pt-4 flex-shrink-0">
         <Collapsible open={isTeamSlotsOpen} onOpenChange={setIsTeamSlotsOpen}>
           <CollapsibleTrigger asChild>
             <Button
               variant="outline"
-              className="w-full justify-between"
+              className="w-full justify-between focus:bg-secondary/50 focus:text-black"
               size="lg"
             >
               <span className="font-semibold">
@@ -243,69 +234,8 @@ const PickPlayers = () => {
               )}
             </Button>
           </CollapsibleTrigger>
-          <CollapsibleContent>
-            <TeamSlots
-              selectedPlayers={selectedPlayers}
-              onRemovePlayer={(playerId) => {
-                setSelectedPlayers(
-                  selectedPlayers.filter((p) => p.player_id !== playerId)
-                );
-              }}
-              match={match}
-              onQuickFill={handleQuickFill}
-              onAISuggest={() => setShowSmartSuggestModal(true)}
-              canQuickFill={
-                !!allPlayers &&
-                allPlayers.length > 0 &&
-                selectedPlayers.length < 11
-              }
-              canAISuggest={!!allPlayers && allPlayers.length > 0}
-              isGeneratingSuggestions={generatingSuggestions}
-            />
-          </CollapsibleContent>
-        </Collapsible>
-      </div>
-
-      <div className="container mx-auto px-4 pt-4">
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* Main Content - Player List */}
-          <div className="flex-1 order-2 lg:order-1">
-            <ScrollArea className="h-[calc(100vh-200px)]">
-              <PlayerFilters
-                searchTerm={searchTerm}
-                onSearchChange={setSearchTerm}
-                teamFilter={teamFilter}
-                onTeamFilterChange={setTeamFilter}
-                countryFilter={countryFilter}
-                onCountryFilterChange={setCountryFilter}
-                playingFilter={playingFilter}
-                onPlayingFilterChange={setPlayingFilter}
-                creditsFilter={creditsFilter}
-                onCreditsFilterChange={setCreditsFilter}
-                allPlayers={allPlayers || []}
-              />
-
-              {loading ? (
-                <div className="flex items-center justify-center py-20">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                </div>
-              ) : (
-                <RoleTabs
-                  activeRole={activeRole}
-                  onRoleChange={setActiveRole}
-                  selectedPlayers={selectedPlayers}
-                  filteredPlayers={filteredPlayers}
-                  isPlayerSelected={isPlayerSelected}
-                  onPlayerToggle={handlePlayerToggle}
-                  onPlayerInfo={handlePlayerInfo}
-                />
-              )}
-            </ScrollArea>
-          </div>
-
-          {/* Sidebar */}
-          <aside className="w-full lg:w-96 order-1 lg:order-2 hidden lg:block">
-            <ScrollArea className="h-[calc(100vh-200px)]">
+          <CollapsibleContent className="mt-3">
+            <div className="max-h-[58vh] overflow-y-auto scrollbar-hide">
               <TeamSlots
                 selectedPlayers={selectedPlayers}
                 onRemovePlayer={(playerId) => {
@@ -324,13 +254,73 @@ const PickPlayers = () => {
                 canAISuggest={!!allPlayers && allPlayers.length > 0}
                 isGeneratingSuggestions={generatingSuggestions}
               />
-            </ScrollArea>
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
+      </div>
+
+      {/* Main Content Area with Independent Scrollers */}
+      <div className="flex-1 container mx-auto px-4 py-3 overflow-hidden">
+        <div className="flex flex-col lg:flex-row gap-6 h-full">
+          {/* Left Side - Player List with Independent Scroll */}
+          <div className=" pb-20 flex-1 order-2 lg:order-1 min-w-0 overflow-y-auto scrollbar-hide">
+            <PlayerFilters
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              teamFilter={teamFilter}
+              onTeamFilterChange={setTeamFilter}
+              countryFilter={countryFilter}
+              onCountryFilterChange={setCountryFilter}
+              playingFilter={playingFilter}
+              onPlayingFilterChange={setPlayingFilter}
+              creditsFilter={creditsFilter}
+              onCreditsFilterChange={setCreditsFilter}
+              allPlayers={allPlayers || []}
+            />
+
+            {loading ? (
+              <div className="flex items-center justify-center py-20">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : (
+              <RoleTabs
+                activeRole={activeRole}
+                onRoleChange={setActiveRole}
+                selectedPlayers={selectedPlayers}
+                filteredPlayers={filteredPlayers}
+                isPlayerSelected={isPlayerSelected}
+                onPlayerToggle={handlePlayerToggle}
+                onPlayerInfo={handlePlayerInfo}
+              />
+            )}
+          </div>
+
+          {/* Right Side - Team Slots with Independent Scroll */}
+          <aside className="pb-20 w-full lg:w-96 order-1 lg:order-2 hidden lg:block overflow-y-auto scrollbar-hide">
+            <TeamSlots
+              selectedPlayers={selectedPlayers}
+              onRemovePlayer={(playerId) => {
+                setSelectedPlayers(
+                  selectedPlayers.filter((p) => p.player_id !== playerId)
+                );
+              }}
+              match={match}
+              onQuickFill={handleQuickFill}
+              onAISuggest={() => setShowSmartSuggestModal(true)}
+              canQuickFill={
+                !!allPlayers &&
+                allPlayers.length > 0 &&
+                selectedPlayers.length < 11
+              }
+              canAISuggest={!!allPlayers && allPlayers.length > 0}
+              isGeneratingSuggestions={generatingSuggestions}
+            />
           </aside>
         </div>
       </div>
 
-      {/* Fixed Bottom Bar - highest z-index */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur-sm border-t border-border shadow-xl z-40">
+      {/* Fixed Bottom Button */}
+      <div className="fixed bottom-3 left-0 right-0 px-4  ">
         <div className="container mx-auto px-0">
           <Button
             onClick={handleNext}
@@ -348,10 +338,10 @@ const PickPlayers = () => {
         </div>
       </div>
 
+      {/* AI Intro Modal */}
       <Dialog open={showIntroModal} onOpenChange={setShowIntroModal}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            {/* AI Icon */}
             <div className="mx-auto mb-3 w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-lg">
               <Sparkles className="h-7 w-7 text-white" />
             </div>
@@ -365,7 +355,6 @@ const PickPlayers = () => {
             </DialogDescription>
           </DialogHeader>
 
-          {/* Compact Feature List */}
           <div className="space-y-2 py-4">
             <div className="flex items-center gap-3 text-sm">
               <div className="p-2 bg-purple-500/10 rounded-lg">
@@ -393,7 +382,6 @@ const PickPlayers = () => {
             </div>
           </div>
 
-          {/* Action Button */}
           <Button
             onClick={() => {
               setShowIntroModal(false);

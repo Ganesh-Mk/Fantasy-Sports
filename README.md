@@ -158,25 +158,74 @@ bun run build
 
 ---
 
-## 🐳 Docker
+## 🐳 Docker & Docker Compose
 
 ### Prerequisites
 
-- **Docker** installed on your system
+- **Docker** and **Docker Compose** installed on your system
 
-### Build Docker Image
+### Using Docker Compose (Recommended)
+
+The project includes a `docker-compose.yml` file for easy setup and deployment.
+
+#### Quick Start
 
 ```bash
+# Start the application in detached mode
+npm run docker:start
+# or
+docker-compose up -d
+
+# View logs
+npm run docker:logs
+# or
+docker-compose logs -f
+```
+
+#### Available Docker Commands
+
+| Command                  | Description                                  |
+| ------------------------ | -------------------------------------------- |
+| `npm run docker:start`   | Start containers in background and show logs |
+| `npm run docker:up`      | Start containers (foreground)                |
+| `npm run docker:stop`    | Stop all containers                          |
+| `npm run docker:restart` | Restart containers                           |
+| `npm run docker:logs`    | Follow container logs                        |
+| `npm run docker:rebuild` | Rebuild and restart containers               |
+| `npm run docker:status`  | Show container status                        |
+
+#### Manual Docker Compose Commands
+
+```bash
+# Start services
+docker-compose up -d
+
+# View running containers
+docker-compose ps
+
+# Stop services
+docker-compose down
+
+# Rebuild and restart
+docker-compose up -d --build
+
+# View logs
+docker-compose logs -f
+```
+
+### Direct Docker Commands
+
+If you prefer to use Docker directly:
+
+```bash
+# Build the image
 docker build -t fantasy-sports .
+
+# Run the container
+docker run -p 3000:80 fantasy-sports
 ```
 
-### Run Container
-
-```bash
-docker run -p 80:80 fantasy-sports
-```
-
-Access the app at `http://localhost:80`
+Access the app at `http://localhost:3000`
 
 ---
 

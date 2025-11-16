@@ -26,7 +26,7 @@ export const RoleTabs = ({
   const roles = ["All", "Wicket-Keeper", "Batsman", "All-Rounder", "Bowler"];
 
   return (
-    <Tabs value={activeRole} onValueChange={onRoleChange} className="w-full">
+    <Tabs value={activeRole} onValueChange={onRoleChange}>
       {/* Desktop Tabs - Grid Layout */}
       <TabsList className="hidden md:grid w-full grid-cols-5 mb-6 h-12 bg-muted/50">
         {roles.map((role) => {
@@ -56,9 +56,9 @@ export const RoleTabs = ({
         })}
       </TabsList>
 
-      {/* Mobile Tabs - Horizontal Scroll with Pills */}
-      <div className="md:hidden mb-6">
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+      {/* Mobile Tabs - Horizontal Scroll */}
+      <div className="w-full md:hidden mb-4 pr-4 overflow-x-auto scrollbar-hide">
+        <div className="flex gap-2 min-w-max pb-2">
           {roles.map((role) => {
             const count =
               role === "All"
@@ -75,14 +75,14 @@ export const RoleTabs = ({
                 key={role}
                 onClick={() => onRoleChange(role)}
                 className={`
-                flex-shrink-0 px-4 py-2.5 rounded-full font-medium text-sm
-                transition-all duration-200 whitespace-nowrap
-                ${
-                  isActive
-                    ? "bg-primary text-primary-foreground shadow-md scale-105"
-                    : "bg-muted text-muted-foreground hover:bg-muted/80"
-                }
-              `}
+                  px-4 py-2.5 rounded-full font-medium text-sm
+                  transition-all duration-200 whitespace-nowrap
+                  ${
+                    isActive
+                      ? "bg-primary text-primary-foreground shadow-md"
+                      : "bg-muted text-muted-foreground hover:bg-muted/80"
+                  }
+                `}
               >
                 <span>{role === "All" ? "All" : role.split("-")[0]}</span>
                 {limits && (
@@ -96,8 +96,8 @@ export const RoleTabs = ({
         </div>
       </div>
 
-      <TabsContent value={activeRole} className="space-y-3 mt-0">
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+      <TabsContent value={activeRole} className="mt-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4">
           {filteredPlayers.map((player) => (
             <PlayerCard
               key={player.player_id}

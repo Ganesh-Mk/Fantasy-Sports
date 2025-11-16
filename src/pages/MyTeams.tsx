@@ -164,7 +164,7 @@ const MyTeams = () => {
       </main>
 
       {/* Fixed Bottom Action Bar */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur-sm border-t border-border shadow-xl">
+      <div className="fixed bottom-3 left-0 right-0 px-4 ">
         <div className="container mx-auto px-0">
           <Button
             onClick={handleCreateTeam}

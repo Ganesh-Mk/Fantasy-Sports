@@ -3,12 +3,6 @@ import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Info, TrendingUp } from "lucide-react";
-import {
-  TooltipProvider,
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from "@/components/ui/tooltip";
 
 interface PlayerCardProps {
   player: Player;
@@ -25,7 +19,7 @@ export const PlayerCard = ({
 }: PlayerCardProps) => {
   return (
     <Card
-      className={`overflow-hidden cursor-pointer transition-all duration-300 bg-gradient-card hover:shadow-xl group relative ${
+      className={`overflow-hidden cursor-pointer transition-all duration-300 bg-gradient-card hover:shadow-xl group relative min-w-0 max-w-full ${
         isSelected
           ? "border-primary border-2 shadow-lg shadow-primary/20 ring-2 ring-primary/10"
           : "border-border hover:border-primary/30"
@@ -52,7 +46,7 @@ export const PlayerCard = ({
       )}
 
       {/* Player Header */}
-      <div className="p-4 pb-3">
+      <div className="p-3 pb-2 md:p-4 md:pb-3">
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="flex items-start gap-3 flex-1">
             <Checkbox
@@ -72,15 +66,21 @@ export const PlayerCard = ({
               </p>
 
               {/* Badges */}
-              <div className="flex items-center gap-1.5 flex-wrap">
-                <Badge variant="secondary" className="text-xs font-medium">
+              <div className="flex items-center gap-1.5 flex-wrap max-w-full">
+                <Badge
+                  variant="secondary"
+                  className="text-xs font-medium truncate max-w-[120px]"
+                >
                   {player.team_name}
                 </Badge>
-                <Badge variant="outline" className="text-xs">
+                <Badge
+                  variant="outline"
+                  className="text-xs truncate max-w-[100px]"
+                >
                   {player.country}
                 </Badge>
                 {player.is_playing && (
-                  <Badge className="text-xs bg-green-500 hover:bg-green-600 border-0">
+                  <Badge className="text-xs bg-green-500 hover:bg-green-600 border-0 flex-shrink-0">
                     Playing XI
                   </Badge>
                 )}
@@ -96,20 +96,18 @@ export const PlayerCard = ({
           </div>
 
           {/* Info Button */}
-          {player.player_stats_available && (
-            <button
-              onClick={(e) => onInfoClick(player, e)}
-              className="flex-shrink-0 p-2 hover:bg-primary/10 rounded-lg transition-colors group/info"
-              aria-label="View player stats"
-            >
-              <Info className="h-4 w-4 text-muted-foreground group-hover/info:text-primary transition-colors" />
-            </button>
-          )}
+          <button
+            onClick={(e) => onInfoClick(player, e)}
+            className="flex-shrink-0 p-2 hover:bg-primary/10 rounded-lg transition-colors group/info"
+            aria-label="View player stats"
+          >
+            <Info className="h-4 w-4 text-muted-foreground group-hover/info:text-primary transition-colors" />
+          </button>
         </div>
       </div>
 
       {/* Stats Footer */}
-      <div className="bg-gradient-to-r from-muted/30 via-muted/20 to-muted/30 px-4 py-3 border-t border-border/50">
+      <div className="bg-gradient-to-r from-muted/30 via-muted/20 to-muted/30 px-3 py-2 md:px-4 md:py-3 border-t border-border/50">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div>

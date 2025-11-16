@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  fantasy-sports:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fantasy-sports:latest
+    container_name: fantasy-sports-compose 
+    ports:
+      - "3000:80"
+    restart: unless-stopped

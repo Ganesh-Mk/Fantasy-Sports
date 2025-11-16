@@ -8,7 +8,14 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "docker:start": "docker-compose up -d && echo \"\n✅ App running at http://localhost:3000\n\" && docker-compose logs",
+    "docker:up": "docker-compose up",
+    "docker:stop": "docker-compose down",
+    "docker:restart": "docker-compose restart",
+    "docker:logs": "docker-compose logs -f",
+    "docker:rebuild": "docker-compose down && docker-compose up -d --build && echo \"\n✅ Rebuilt! App at http://localhost:3000\n\" && docker-compose logs",
+    "docker:status": "docker-compose ps"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

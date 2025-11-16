@@ -73,7 +73,7 @@ export const TeamSlots = ({
     selectedPlayers.length === 11;
 
   return (
-    <div className="space-y-3 pt-4">
+    <div className="space-y-3  ">
       {/* Stats Summary */}
       <Card className="p-3 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border-primary/20">
         <div className="space-y-3">
