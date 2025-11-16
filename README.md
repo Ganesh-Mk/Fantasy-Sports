@@ -146,6 +146,58 @@ npm run build
 npm run preview
 ```
 
+### Using Bun (Recommended)
+
+Since this project uses Bun, you can also use:
+
+```bash
+bun install
+bun run dev
+bun run build
+```
+
+---
+
+## 🐳 Docker
+
+### Prerequisites
+
+- **Docker** installed on your system
+
+### Build Docker Image
+
+```bash
+docker build -t fantasy-sports .
+```
+
+### Run Container
+
+```bash
+docker run -p 80:80 fantasy-sports
+```
+
+Access the app at `http://localhost:80`
+
+---
+
+## 🚀 CI/CD
+
+This project uses GitHub Actions for continuous integration and deployment to Vercel.
+
+### Workflow
+
+- **Lint**: Runs ESLint on code
+- **Build**: Builds the project
+- **Deploy**: Deploys to Vercel on push to main branch
+
+### Required Secrets
+
+Set the following secrets in your GitHub repository settings:
+
+- `VERCEL_TOKEN`: Your Vercel token
+- `VERCEL_ORG_ID`: Your Vercel organization ID
+- `VERCEL_PROJECT_ID`: Your Vercel project ID
+
 ---
 
 ## 🎮 Live site
