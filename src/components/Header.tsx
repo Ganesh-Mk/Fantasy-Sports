@@ -85,14 +85,14 @@ export const Header = ({ title, showBack = false }: HeaderProps) => {
               <Button
                 variant="ghost"
                 className="text-primary-foreground hover:bg-white/20 font-medium"
-                onClick={() => navigate("/my-teams")}
+                onClick={() => navigate("/")}
               >
                 My Teams
               </Button>
               <Button
                 variant="ghost"
                 className="text-primary-foreground hover:bg-white/20 font-medium flex items-center gap-1"
-                onClick={() => navigate("/leaderboard")}
+                onClick={() => navigate("/")}
               >
                 <Trophy className="h-4 w-4" />
                 Leaderboard
@@ -105,6 +105,7 @@ export const Header = ({ title, showBack = false }: HeaderProps) => {
               size="icon"
               className="relative text-primary-foreground hover:bg-white/20 transition-all"
               aria-label="Notifications"
+              onClick={() => navigate("/")}
             >
               <Bell className="h-5 w-5" />
               {notificationCount > 0 && (
@@ -132,27 +133,30 @@ export const Header = ({ title, showBack = false }: HeaderProps) => {
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel>
                   <div>
-                    <p className="font-semibold">Guest User</p>
+                    <p className="font-semibold">Ganesh Koparde</p>
                     <p className="text-xs text-muted-foreground">
-                      guest@fantasy.com
+                      ganeshmk247@gmail.com
                     </p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate("/profile")}>
+                <DropdownMenuItem onClick={() => navigate("/")}>
                   <User className="mr-2 h-4 w-4" />
                   Profile
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate("/my-teams")}>
+                <DropdownMenuItem onClick={() => navigate("/")}>
                   <Trophy className="mr-2 h-4 w-4" />
                   My Teams
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate("/settings")}>
+                <DropdownMenuItem onClick={() => navigate("/")}>
                   <Settings className="mr-2 h-4 w-4" />
                   Settings
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-destructive">
+                <DropdownMenuItem
+                  className="text-destructive"
+                  onClick={() => navigate("/")}
+                >
                   Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -176,15 +180,15 @@ export const Header = ({ title, showBack = false }: HeaderProps) => {
                 <DropdownMenuItem onClick={() => navigate("/")}>
                   Matches
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate("/my-teams")}>
+                <DropdownMenuItem onClick={() => navigate("/")}>
                   My Teams
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate("/leaderboard")}>
+                <DropdownMenuItem onClick={() => navigate("/")}>
                   <Trophy className="mr-2 h-4 w-4" />
                   Leaderboard
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate("/settings")}>
+                <DropdownMenuItem onClick={() => navigate("/")}>
                   <Settings className="mr-2 h-4 w-4" />
                   Settings
                 </DropdownMenuItem>

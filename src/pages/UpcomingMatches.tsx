@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
-import { MatchCard } from "@/components/MatchCard";
+import { MatchCard } from "@/components/matches/MatchCard";
 import { Match } from "@/types/fantasy";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -131,7 +131,7 @@ const UpcomingMatches = () => {
                   size="lg"
                   variant="outline"
                   className="border-2 border-white/30 bg-white/10 backdrop-blur-sm hover:bg-white/20 font-semibold px-8 py-6 text-lg"
-                  onClick={() => navigate("/my-teams")}
+                  onClick={() => navigate("/")}
                 >
                   View My Teams
                 </Button>

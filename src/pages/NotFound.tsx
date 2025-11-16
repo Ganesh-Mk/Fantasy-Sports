@@ -81,7 +81,7 @@ const NotFound = () => {
             <Button
               variant="link"
               size="sm"
-              onClick={() => navigate("/my-teams")}
+              onClick={() => navigate("/")}
               className="text-primary"
             >
               My Teams

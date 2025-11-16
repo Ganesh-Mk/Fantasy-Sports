@@ -112,7 +112,7 @@ export const fillMinimumRequirements = (
   availablePlayers: PlayerWithScore[],
   strategy: "Balanced" | "Aggressive" | "Value Picks"
 ): Player[] => {
-  const result = [...team];
+  let result = [...team];
   const sortedAvailable = sortPlayersForStrategy(
     availablePlayers.filter(
       (p) => !result.some((tp) => tp.player_id === p.player_id)
@@ -120,17 +120,59 @@ export const fillMinimumRequirements = (
     strategy
   );
 
-  // Ensure minimum role requirements
-  for (const [role, limits] of Object.entries(ROLE_LIMITS)) {
-    const currentCount = result.filter((p) => p.role === role).length;
-    const needed = limits.min - currentCount;
+  // If we have 11 players but don't meet minimums, we need to replace players
+  const hasElevenPlayers = result.length === 11;
+  const meetsMinimums = Object.entries(ROLE_LIMITS).every(([role, limits]) => {
+    const count = result.filter((p) => p.role === role).length;
+    return count >= limits.min;
+  });
 
-    if (needed > 0) {
-      const rolePlayers = sortedAvailable.filter(
-        (p) => p.role === role && canAddToTeam(result, p)
-      );
-      for (let i = 0; i < needed && i < rolePlayers.length; i++) {
-        result.push(rolePlayers[i]);
+  if (hasElevenPlayers && !meetsMinimums) {
+    // Need to replace players to meet minimum requirements
+    for (const [role, limits] of Object.entries(ROLE_LIMITS)) {
+      const currentCount = result.filter((p) => p.role === role).length;
+      const needed = limits.min - currentCount;
+
+      if (needed > 0) {
+        // Find players of this role that we can add
+        const rolePlayers = sortedAvailable.filter((p) => p.role === role);
+
+        for (let i = 0; i < needed && i < rolePlayers.length; i++) {
+          // Find a player to replace - prefer lower value players that we can remove
+          const playerToReplace = result
+            .filter((p) => p.role !== role) // Don't replace players of the same role we're adding
+            .sort((a, b) => calculateValueScore(a) - calculateValueScore(b))[0]; // Replace lowest value player
+
+          if (
+            playerToReplace &&
+            canAddToTeam(
+              result.filter((p) => p.player_id !== playerToReplace.player_id),
+              rolePlayers[i]
+            )
+          ) {
+            // Replace the player
+            result = result.filter(
+              (p) => p.player_id !== playerToReplace.player_id
+            );
+            result.push(rolePlayers[i]);
+          }
+        }
+      }
+    }
+  } else {
+    // Original logic for teams with less than 11 players
+    // Ensure minimum role requirements
+    for (const [role, limits] of Object.entries(ROLE_LIMITS)) {
+      const currentCount = result.filter((p) => p.role === role).length;
+      const needed = limits.min - currentCount;
+
+      if (needed > 0) {
+        const rolePlayers = sortedAvailable.filter(
+          (p) => p.role === role && canAddToTeam(result, p)
+        );
+        for (let i = 0; i < needed && i < rolePlayers.length; i++) {
+          result.push(rolePlayers[i]);
+        }
       }
     }
   }
@@ -169,6 +211,27 @@ export const generateTeamSuggestion = (
     );
     if (filledTeam.length === 11) {
       team.splice(0, team.length, ...filledTeam);
+      totalCredits = team.reduce((sum, p) => sum + p.event_player_credit, 0);
+    } else {
+      // Cannot form a valid team
+      return null;
+    }
+  }
+
+  // Even with 11 players, ensure minimum role requirements are met
+  const meetsMinimums = Object.entries(ROLE_LIMITS).every(([role, limits]) => {
+    const count = team.filter((p) => p.role === role).length;
+    return count >= limits.min;
+  });
+
+  if (!meetsMinimums) {
+    const adjustedTeam = fillMinimumRequirements(
+      team,
+      playersWithScore,
+      strategy
+    );
+    if (adjustedTeam.length === 11) {
+      team.splice(0, team.length, ...adjustedTeam);
       totalCredits = team.reduce((sum, p) => sum + p.event_player_credit, 0);
     } else {
       // Cannot form a valid team
@@ -257,12 +320,31 @@ export const quickFillTeam = (
     (a, b) => b.valueScore - a.valueScore
   );
 
-  const filledTeam = [...currentPlayers];
+  let filledTeam = [...currentPlayers];
 
+  // Fill to 11 players
   for (const player of sortedAvailable) {
     if (filledTeam.length >= 11) break;
     if (canAddToTeam(filledTeam, player)) {
       filledTeam.push(player);
+    }
+  }
+
+  // If we have 11 players but don't meet minimum requirements, adjust
+  if (filledTeam.length === 11) {
+    const meetsMinimums = Object.entries(ROLE_LIMITS).every(
+      ([role, limits]) => {
+        const count = filledTeam.filter((p) => p.role === role).length;
+        return count >= limits.min;
+      }
+    );
+
+    if (!meetsMinimums) {
+      filledTeam = fillMinimumRequirements(
+        filledTeam,
+        playersWithScore,
+        "Balanced" // Use balanced strategy for quick fill
+      );
     }
   }
 

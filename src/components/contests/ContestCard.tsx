@@ -1,9 +1,9 @@
 import { Contest } from "@/types/contest";
-import { Card } from "./ui/card";
-import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Trophy, Users, ArrowRight, Clock } from "lucide-react";
-import { Progress } from "./ui/progress";
+import { Progress } from "@/components/ui/progress";
 
 interface ContestCardProps {
   contest: Contest;

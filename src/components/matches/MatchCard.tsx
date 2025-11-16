@@ -1,6 +1,6 @@
 import { Match } from "@/types/fantasy";
-import { Card } from "./ui/card";
-import { Badge } from "./ui/badge";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Calendar, MapPin, TrendingUp, Clock } from "lucide-react";
 import { format } from "date-fns";
 

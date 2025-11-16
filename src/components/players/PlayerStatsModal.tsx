@@ -1,7 +1,12 @@
 import { Player } from "@/types/fantasy";
 import { PlayerStats } from "@/types/contest";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
-import { Badge } from "./ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
 import {
   TrendingUp,
   Target,
